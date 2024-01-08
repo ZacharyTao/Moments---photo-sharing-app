@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "9B0B13B7-5402-4EA8-A7C4-E553E96518DB"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3C1C954C-4BD3-4807-B260-FF7234DD23C2"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Moment/Views/Post/PostHeader.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "previews"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "3C1C954C-4BD3-4807-B260-FF7234DD23C2 - 1f81e7de805cbd92"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static Moment.PostHeader_Previews.previews.getter : some"
+                  moduleName = "Moment"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zacharytao/Documents/Moment/Moment/Moment/Views/Post/PostHeader.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  uuid = "3C1C954C-4BD3-4807-B260-FF7234DD23C2 - 1f81e7de805cbd92"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static Moment.PostHeader_Previews.previews.getter : some"
+                  moduleName = "Moment"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zacharytao/Documents/Moment/Moment/Moment/Views/Post/PostHeader.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "148">
+               </Location>
+               <Location
+                  uuid = "3C1C954C-4BD3-4807-B260-FF7234DD23C2 - 1f81e7de805cbd92"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static Moment.PostHeader_Previews.previews.getter : some"
+                  moduleName = "Moment"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zacharytao/Documents/Moment/Moment/Moment/Views/Post/PostHeader.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "36">
+               </Location>
+               <Location
+                  uuid = "3C1C954C-4BD3-4807-B260-FF7234DD23C2 - 1f81e7de805cbd92"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static Moment.PostHeader_Previews.previews.getter : some"
+                  moduleName = "Moment"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zacharytao/Documents/Moment/Moment/Moment/Views/Post/PostHeader.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "56">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "239A05D7-9A20-4453-9F68-049456458A2C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Moment/ConversationViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "saveFirstImageAndCaptionToSharedContainer()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

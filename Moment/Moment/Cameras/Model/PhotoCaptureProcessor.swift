@@ -87,7 +87,7 @@ extension PhotoCaptureProcessor: AVCapturePhotoCaptureDelegate {
                     let options = PHAssetResourceCreationOptions()
                     let creationRequest = PHAssetCreationRequest.forAsset()
                     options.uniformTypeIdentifier = self.requestedPhotoSettings.processedFileType.map { $0.rawValue }
-                    creationRequest.addResource(with: .photo, data: photoData, options: options)
+                    //creationRequest.addResource(with: .photo, data: photoData, options: options)
                     
                     
                 }, completionHandler: { _, error in

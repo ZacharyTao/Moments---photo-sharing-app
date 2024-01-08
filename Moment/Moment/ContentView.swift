@@ -8,27 +8,16 @@
 import SwiftUI
 
 //@AppStorage(hasCurrentSessionKey) var hasCurrentSession = false
-
-var body: some View {
-    //    Group {
-    //        if hasCurrentSession {
-    //            MainView()
-    //        } else {
-    //            AuthenticationView()
-    //        }
-    //    }
-    //    .onAppear {
-    //        if hasCurrentSession {
-    //            SessionManager.shared.loadUser()
-    //        }
-    //    }
-    
-    NavigationView {
-        AuthenticatedView {
-            
-        } content: {
-            ConversationView()
-            Spacer()
+struct ContentView : View{
+    var body: some View {
+        
+        NavigationView {
+            AuthenticatedView {
+                
+            } content: {
+                //MainView()
+                ConversationView()
+            }
         }
     }
 }

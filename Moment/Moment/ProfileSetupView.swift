@@ -12,6 +12,14 @@ struct ProfileSetupView: View {
     @State private var username: String = ""
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
+    @Environment(\.dismiss) var dismiss
+    private func submitProfile() {
+            Task {
+                //await viewModel.completeProfileSetup(username: username, photo: selectedImage)
+                dismiss() 
+            }
+        }
+
     
     private var isFormReady: Bool {
         !username.isEmpty && selectedImage != nil
@@ -40,9 +48,7 @@ struct ProfileSetupView: View {
             .cornerRadius(10)
             
             Button("Submit") {
-                Task {
-                    await viewModel.completeProfileSetup(username: username, photo: selectedImage)
-                }
+                submitProfile()
             }
             .disabled(!isFormReady) // Disable the button if form is not ready
             .padding()
@@ -60,6 +66,6 @@ struct ProfileSetupView: View {
 struct ProfileSetupView_Previews: PreviewProvider {
     static var previews: some View {
         ProfileSetupView()
-            .environmentObject(AuthenticationViewModel()) // Add this if your view relies on environment objects
+            .environmentObject(AuthenticationViewModel())
     }
 }

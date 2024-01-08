@@ -7,12 +7,97 @@
 
 import SwiftUI
 
-struct AuthenticatedView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+
+extension AuthenticatedView where Unauthenticated == EmptyView {
+    init(@ViewBuilder content: @escaping () -> Content) {
+        self.unauthenticated = nil
+        self.content = content
     }
 }
 
-#Preview {
-    AuthenticatedView()
+struct AuthenticatedView<Content, Unauthenticated>: View where Content: View, Unauthenticated: View {
+    @StateObject private var viewModel = AuthenticationViewModel()
+    @State private var presentingLoginScreen = false
+    @State private var presentingProfileScreen = false
+    
+    var unauthenticated: Unauthenticated?
+    @ViewBuilder var content: () -> Content
+    
+    public init(unauthenticated: Unauthenticated?, @ViewBuilder content: @escaping () -> Content) {
+        self.unauthenticated = unauthenticated
+        self.content = content
+    }
+    
+    public init(@ViewBuilder unauthenticated: @escaping () -> Unauthenticated, @ViewBuilder content: @escaping () -> Content) {
+        self.unauthenticated = unauthenticated()
+        self.content = content
+    }
+    
+    
+    var body: some View {
+        switch viewModel.authenticationState {
+        case .unauthenticated, .authenticating:
+            //      VStack {
+            //        if let unauthenticated {
+            //          unauthenticated
+            //        }
+            //        else {
+            //          Text("You're not logged in.")
+            //        }
+            //        Button("Tap here to log in") {
+            //          viewModel.reset()
+            //          presentingLoginScreen.toggle()
+            //        }
+            //      }
+            //      .sheet(isPresented: $presentingLoginScreen) {
+            //        AuthenticationView()
+            //          .environmentObject(viewModel)
+            //      }
+            VStack{
+                Spacer()
+                if let unauthenticated {
+                    unauthenticated
+                }
+                Image("M")
+                    .resizable()
+                    .frame(width: 100 , height: 100)
+                    .foregroundColor(Color(.systemPink))
+                    .aspectRatio(contentMode: .fit)
+                    .clipShape(Circle())
+                    .clipped()
+                    .padding(4)
+                    .overlay(Circle().stroke(Color.black, lineWidth: 2))
+                Text("Welcome to Moments!")
+                    .font(.title)
+                Spacer()
+                AuthenticationView()
+                    .environmentObject(viewModel)
+                Spacer()
+            }
+        case .authenticated:
+            VStack {
+                content().environmentObject(viewModel)
+                //Text("You're logged in as \(viewModel.displayName).")
+//                Button("profile") {
+//                    presentingProfileScreen.toggle()
+//                }
+            }
+            .sheet(isPresented: $presentingProfileScreen) {
+                NavigationView {
+                    UserProfileView()
+                        .environmentObject(viewModel)
+                }
+            }
+        }
+    }
+}
+
+struct AuthenticatedView_Previews: PreviewProvider {
+    static var previews: some View {
+        AuthenticatedView {
+            Text("You're signed in.")
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .background(.yellow)
+        }
+    }
 }

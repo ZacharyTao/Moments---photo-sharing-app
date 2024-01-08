@@ -12,14 +12,22 @@ import UIKit
 
 //  MARK: Class Camera Service, handles setup of AVFoundation needed for a basic camera app.
 public struct Photo: Identifiable, Equatable {
-//    The ID of the captured photo
+    //    The ID of the captured photo
     public var id: String
-//    Data representation of the captured photo
+    //    Data representation of the captured photo
     public var originalData: Data
     
-    public init(id: String = UUID().uuidString, originalData: Data) {
+    // New properties
+    public var timestamp: Date?
+    public var location: CLLocation?
+    public var caption: String?
+    
+    public init(id: String = UUID().uuidString, originalData: Data, timestamp: Date? = nil, location: CLLocation? = nil, caption: String? = nil) {
         self.id = id
         self.originalData = originalData
+        self.timestamp = timestamp
+        self.location = location
+        self.caption = caption
     }
 }
 
@@ -60,50 +68,53 @@ extension Photo {
 public class CameraService {
     typealias PhotoCaptureSessionID = String
     
-//    MARK: Observed Properties UI must react to
+    //    MARK: Observed Properties UI must react to
     
-//    1.
+    //    1.
     @Published public var flashMode: AVCaptureDevice.FlashMode = .off
-//    2.
+    //    2.
     @Published public var shouldShowAlertView = false
-//    3.
+    //    3.
     @Published public var shouldShowSpinner = false
-//    4.
+    //    4.
     @Published public var willCapturePhoto = false
-//    5.
+    //    5.
     @Published public var isCameraButtonDisabled = true
-//    6.
+    //    6.
     @Published public var isCameraUnavailable = true
-//    8.
+    //    8.
     @Published public var photo: Photo?
     
-
-//    MARK: Alert properties
+    private let locationManager = CLLocationManager()
+    
+    
+    
+    //    MARK: Alert properties
     public var alertError: AlertError = AlertError()
     
-// MARK: Session Management Properties
+    // MARK: Session Management Properties
     
-//    9
+    //    9
     public let session = AVCaptureSession()
-//    10
+    //    10
     var isSessionRunning = false
-//    12
+    //    12
     var isConfigured = false
-//    13
+    //    13
     var setupResult: SessionSetupResult = .success
-//    14
+    //    14
     // Communicate with the session and other session objects on this queue.
     private let sessionQueue = DispatchQueue(label: "session queue")
     // The device we'll use to capture video from.
     @objc dynamic var videoDeviceInput: AVCaptureDeviceInput!
-//    15. Video capture device discovery session.
+    //    15. Video capture device discovery session.
     // MARK: Device Configuration Properties
     private let videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera, .builtInTrueDepthCamera], mediaType: .video, position: .unspecified)
     
     // MARK: Capturing Photos
-//    16. PhotoOutput. Configures and captures photos.
+    //    16. PhotoOutput. Configures and captures photos.
     private let photoOutput = AVCapturePhotoOutput()
-//    17 Stores delegates that will handle the photo capture process's stages.
+    //    17 Stores delegates that will handle the photo capture process's stages.
     private var inProgressPhotoCaptureDelegates = [Int64: PhotoCaptureProcessor]()
     
     // MARK: KVO and Notifications Properties
@@ -129,7 +140,7 @@ public class CameraService {
     
     //        MARK: Checks for user's permisions
     public func checkForPermissions() {
-      
+        
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             // The user has previously granted access to the camera.
@@ -154,8 +165,8 @@ public class CameraService {
             
             DispatchQueue.main.async {
                 self.alertError = AlertError(title: "Camera Access", message: "SwiftCamera doesn't have access to use your camera, please update your privacy settings.", primaryButtonTitle: "Settings", secondaryButtonTitle: nil, primaryAction: {
-                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
-                                                  options: [:], completionHandler: nil)
+                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
+                                              options: [:], completionHandler: nil)
                     
                 }, secondaryAction: nil)
                 self.shouldShowAlertView = true
@@ -236,7 +247,7 @@ public class CameraService {
         
         self.start()
     }
- 
+    
     //  MARK: Device Configuration
     
     /// - Tag: ChangeCamera
@@ -310,15 +321,15 @@ public class CameraService {
             }
             
             DispatchQueue.main.async {
-//                MARK: Here enable capture button due to successfull setup
+                //                MARK: Here enable capture button due to successfull setup
                 self.isCameraButtonDisabled = false
             }
         }
     }
     
     public func focus(at focusPoint: CGPoint){
-//        let focusPoint = self.videoPreviewLayer.captureDevicePointConverted(fromLayerPoint: point)
-
+        //        let focusPoint = self.videoPreviewLayer.captureDevicePointConverted(fromLayerPoint: point)
+        
         let device = self.videoDeviceInput.device
         do {
             try device.lockForConfiguration()
@@ -359,7 +370,7 @@ public class CameraService {
     /// - Tag: Start capture session
     
     public func start() {
-//        We use our capture session queue to ensure our UI runs smoothly on the main thread.
+        //        We use our capture session queue to ensure our UI runs smoothly on the main thread.
         sessionQueue.async {
             if !self.isSessionRunning && self.isConfigured {
                 switch self.setupResult {
@@ -376,7 +387,7 @@ public class CameraService {
                     
                 case .configurationFailed, .notAuthorized:
                     print("Application not authorized to use camera")
-
+                    
                     DispatchQueue.main.async {
                         self.alertError = AlertError(title: "Camera Error", message: "Camera configuration failed. Either your device camera is not available or its missing permissions", primaryButtonTitle: "Accept", secondaryButtonTitle: nil, primaryAction: nil, secondaryAction: nil)
                         self.shouldShowAlertView = true
@@ -387,6 +398,33 @@ public class CameraService {
             }
         }
     }
+    
+    func savePhoto(photo: Photo) {
+        guard let data = photo.compressedData else { return }
+        
+        let filename = UUID().uuidString + ".jpeg"
+        let metadataFilename = filename + ".json"
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentsDirectory.appendingPathComponent(filename)
+        let metadataFileURL = documentsDirectory.appendingPathComponent(metadataFilename)
+        
+        // Save the photo data
+        do {
+            try data.write(to: fileURL)
+            
+            // Save metadata
+            let metadata = PhotoMetadata(id: photo.id, timestamp: photo.timestamp, latitude: photo.location?.coordinate.latitude, longitude: photo.location?.coordinate.longitude, caption: photo.caption)
+                // ... continue with saving the metadata as JSON ...
+            let metadataData = try JSONEncoder().encode(metadata)
+            try metadataData.write(to: metadataFileURL)
+
+            
+        } catch {
+            print("Unable to save photo or metadata: \(error.localizedDescription)")
+        }
+    }
+    
+    
     
     public func set(zoom: CGFloat){
         let factor = zoom < 1 ? 1 : zoom
@@ -409,6 +447,14 @@ public class CameraService {
         if self.setupResult != .configurationFailed {
             self.isCameraButtonDisabled = true
             
+            DispatchQueue.global(qos: .userInitiated).async {
+                if CLLocationManager.locationServicesEnabled(),
+                   CLLocationManager.authorizationStatus() == .authorizedWhenInUse ||
+                   CLLocationManager.authorizationStatus() == .authorizedAlways {
+                    
+                    self.locationManager.startUpdatingLocation()
+                }
+            }
             sessionQueue.async {
                 if let photoOutputConnection = self.photoOutput.connection(with: .video) {
                     photoOutputConnection.videoOrientation = .portrait
@@ -420,12 +466,14 @@ public class CameraService {
                     photoSettings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.hevc])
                 }
                 
+                
+                
                 // Sets the flash option for this capture.
                 if self.videoDeviceInput.device.isFlashAvailable {
                     photoSettings.flashMode = self.flashMode
                 }
                 
-                photoSettings.isHighResolutionPhotoEnabled = true
+                photoSettings.maxPhotoDimensions = self.photoOutput.maxPhotoDimensions
                 
                 // Sets the preview thumbnail pixel format
                 if !photoSettings.__availablePreviewPhotoPixelFormatTypes.isEmpty {
@@ -446,14 +494,32 @@ public class CameraService {
                     
                 }, completionHandler: { [weak self] (photoCaptureProcessor) in
                     // When the capture is complete, remove a reference to the photo capture delegate so it can be deallocated.
+                    let currentTimestamp = Date()
+                    let currentLocation = self?.locationManager.location
+                    
                     if let data = photoCaptureProcessor.photoData {
-                        self?.photo = Photo(originalData: data)
-                        print("passing photo")
+                        var finalImage = UIImage(data: data)
+                        if self?.videoDeviceInput.device.position == .front, let image = finalImage {
+                            // Flip the image for the front camera
+                            finalImage = UIImage(cgImage: image.cgImage!, scale: image.scale, orientation: .leftMirrored)
+                        }
+                        
+                        let photo = Photo(originalData: finalImage?.jpegData(compressionQuality: 1.0) ?? data, timestamp: currentTimestamp, location: currentLocation)
+                        
+                        //                        self?.photo = Photo(originalData: finalImage?.jpegData(compressionQuality: 1.0) ?? data, timestamp: currentTimestamp, location: currentLocation)
+                        //                        print("passing photo with time and location")
+                        //                        self?.savePhoto()
+                        DispatchQueue.main.async {
+                            self?.photo = photo
+                            //self?.savePhoto(photo: photo)
+                        }
+                        self?.stop()
                     } else {
                         print("No photo data")
                     }
                     
                     self?.isCameraButtonDisabled = false
+                    self?.locationManager.stopUpdatingLocation()
                     
                     self?.sessionQueue.async {
                         self?.inProgressPhotoCaptureDelegates[photoCaptureProcessor.requestedPhotoSettings.uniqueID] = nil

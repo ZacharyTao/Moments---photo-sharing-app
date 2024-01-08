@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct Friend: Identifiable {
+    var id: String  // Unique identifier, e.g., user's Firebase UID
+    var username: String
+}

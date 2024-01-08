@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct ConversationView: View {
     @State private var showCamera = false
-    @State private var path : [Int] = []
+    @State var path : [Int] = []
     @StateObject var viewModel = ConversationViewModel()
+    let user = Auth.auth().currentUser
     
     
     var body: some View {
@@ -35,27 +37,27 @@ struct ConversationView: View {
                                         .font(.system(size:18, weight: .semibold))
                                         .foregroundColor(.black)
                                 }
-                                
                             }
                         }
                         
                     }
                 }.onAppear{
-                    viewModel.refreshPhotos()
-                    viewModel.deleteOldPhotos()
-                    
+                    viewModel.refreshPhotos()                    
                 }
                 
             }
             .padding()
+            .navigationBarHidden(true)
             
         }.accentColor(.black)
+            .navigationBarHidden(true)
+
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ConversationView()
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ConversationView(path: .constant([]))
+//    }
+//}
 

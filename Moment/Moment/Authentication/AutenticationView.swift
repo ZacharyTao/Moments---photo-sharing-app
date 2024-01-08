@@ -6,13 +6,28 @@
 //
 
 import SwiftUI
+import Combine
 
-struct AutenticationView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct AuthenticationView: View {
+  @EnvironmentObject var viewModel: AuthenticationViewModel
+
+  var body: some View {
+    VStack {
+      switch viewModel.flow {
+      case .login:
+        LoginView()
+          .environmentObject(viewModel)
+      case .signUp:
+        SignupView()
+          .environmentObject(viewModel)
+      }
     }
+  }
 }
 
-#Preview {
-    AutenticationView()
+struct AuthenticationView_Previews: PreviewProvider {
+  static var previews: some View {
+    AuthenticationView()
+      .environmentObject(AuthenticationViewModel())
+  }
 }

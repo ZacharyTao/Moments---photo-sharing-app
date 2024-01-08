@@ -14,7 +14,6 @@ struct SendPageView: View {
     @State private var caption: String = ""
     @Binding var path : [Int]
     @State private var locationString: String = "Location: Loading..."
-    @Environment(\.presentationMode) var presentationMode
     @State var showCameraAgain:Bool = false
 
 
@@ -193,14 +192,14 @@ extension SendPageView {
                     .onAppear {
                         getPlacemark(for: location) { placemark in
                             if let placemark = placemark, let city = placemark.locality, let district = placemark.subLocality {
-                                self.locationString = "\(city), \(district)"
+                                self.locationString = "\(district), \(city)"
                             } else {
-                                self.locationString = "Location: Unknown"
+                                self.locationString = ""
                             }
                         }
                     }
             } else {
-                Text("Location: Unknown")
+                Text("")
             }
         }
 }
