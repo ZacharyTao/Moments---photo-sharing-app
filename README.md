@@ -28,7 +28,7 @@ After launching the app, users can sign in or sign up using their email. Once au
 
 ## Contributing
 
-Contributions to Moments are welcome. Please read our contributing guidelines before submitting pull requests to the project.
+Contributions to Moments are welcome.
 
 ## Acknowledgements
 
