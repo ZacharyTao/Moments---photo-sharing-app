@@ -20,7 +20,7 @@ Moments is a social media application for iOS, designed to enhance real-time pho
 - **Custom Camera Functionality:** Utilizes AVFoundation for advanced camera features, allowing users to capture photos in-app.
 - **Real-time Photo Sharing:** Seamlessly share captured moments with friends, complete with time and geolocation data.
 - **iOS Home Screen Widget:** Implements WidgetKit to display recent photos on the user’s home screen, ensuring quick access and continuous engagement.
-- **Firebase Integration:** Robust user authentication with Firebase, including "Sign in with Apple". Firestore is used for data management and storing photo uploads.
+- **Firebase Integration:** Robust user authentication with Firebase. Firestore is used for data management and storing photo uploads.
 
 ## Installation
 Clone the repository to your local machine:
