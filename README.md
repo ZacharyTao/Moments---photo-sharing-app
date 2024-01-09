@@ -1,4 +1,4 @@
-# Moments - Social Photo Sharing iOS App
+# Moments - Photo Sharing iOS App
 
 ## Overview
 Moments is a social media application for iOS, designed to enhance real-time photo sharing experiences. Built using Swift, it integrates SwiftUI for intuitive UI design and UIKit for specific UI components. Moments is not just about sharing images; it's about sharing experiences, capturing real-time moments with contextual information such as location and time.
