@@ -43,7 +43,3 @@ After launching the app, users can sign in or sign up using their email. Once au
 
 Contributions to Moments are welcome.
 
-## Acknowledgements
-
-Special thanks to all contributors and testers who have helped in shaping Moments into a vibrant community platform.
-
