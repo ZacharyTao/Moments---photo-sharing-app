@@ -29,7 +29,7 @@ Clone the repository to your local machine:
 git clone https://github.com/ZacharyTao/Moments.git
 cd Moments
 ```
-Open the project in Xcode and run it on your desired device or simulator.
+Open the project in Xcode, andd your own google firestore plist, and run it on your desired device or simulator.
 
 ## Usage
 
