@@ -97,9 +97,11 @@ func fetchFirstImageAndCaption() -> (UIImage, String) {
 
     var image = UIImage()
     var caption = ""
-
-    if let imageData = try? Data(contentsOf: sharedImageURL) {
-        image = UIImage(data: imageData) ?? UIImage()
+    if let imageData = try? Data(contentsOf: sharedImageURL),
+       let originalImage = UIImage(data: imageData) {
+        // Resize the image to a suitable width for the widget
+        let resizedWidth: CGFloat = 600 // Set this value to what suits your widget's layout
+        image = originalImage.resized(toWidth: resizedWidth) ?? UIImage()
     }
 
     if let loadedCaption = try? String(contentsOf: sharedCaptionURL, encoding: .utf8) {
@@ -107,4 +109,32 @@ func fetchFirstImageAndCaption() -> (UIImage, String) {
     }
 
     return (image, caption)
+}
+
+
+func resizeImage(_ image: UIImage, toMaxWidth width: CGFloat, maxHeight height: CGFloat) -> UIImage {
+    let size = image.size
+    let widthRatio  = width  / size.width
+    let heightRatio = height / size.height
+    let ratio = min(widthRatio, heightRatio)
+    let newSize = CGSize(width: size.width * ratio, height: size.height * ratio)
+    let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+
+    UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+    image.draw(in: rect)
+    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+
+    return newImage ?? image
+}
+
+extension UIImage {
+  func resized(toWidth width: CGFloat, isOpaque: Bool = true) -> UIImage? {
+    let canvas = CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))
+    let format = imageRendererFormat
+    format.opaque = isOpaque
+    return UIGraphicsImageRenderer(size: canvas, format: format).image {
+      _ in draw(in: CGRect(origin: .zero, size: canvas))
+    }
+  }
 }
